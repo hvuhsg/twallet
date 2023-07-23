@@ -47,7 +47,6 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
     # /start=accept-<transfer uuid>
     arg = context.user_data["redirect-args"].removeprefix("/start ")
     transfer_uuid = arg.split("-")[1:][0]
-    print(transfer_uuid)
     transfer_data = context.bot_data.get("transfers", {}).get(transfer_uuid)
 
     if transfer_data is None:
@@ -56,7 +55,7 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
 
     self_wallet = context.user_data["wallet"]
     wallet = transfer_data["wallet"]
-    amount = transfer_data["amount"]
+    amount = float(transfer_data["amount"])
 
     if self_wallet.balance < amount:
         await update.message.reply_text("⚠️ The sender does not have sufficient funds on his balance")
@@ -64,7 +63,8 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
 
     try:
         await wallet.transfer(amount=amount, address=self_wallet.address, comment="contact-transfer")
-    except:
+    except Exception as e:
+        print(e, amount, self_wallet.address)
         await update.message.reply_text("⚠️ Unknown error during transfer of funds")
         return
 
