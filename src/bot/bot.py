@@ -90,7 +90,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     transfer_uuid = token_urlsafe(16)
     if "transfers" not in context.bot_data:
         context.bot_data["transfers"] = {}
-    context.bot_data["transfers"][transfer_uuid] = {"wallet": wallet.wordlist, "amount": amount}
+    context.bot_data["transfers"][transfer_uuid] = {"wallet": tuple(wallet.wordlist), "amount": amount}
 
     reply_markup = InlineKeyboardMarkup(
         [[
