@@ -46,7 +46,8 @@ async def send_transfer_handler(update: Update, context: ContextTypes.DEFAULT_TY
 async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # /start=accept-<transfer uuid>
     arg = context.user_data["redirect-args"].removeprefix("/start ")
-    transfer_uuid = arg.split("-")[1:]
+    transfer_uuid = arg.split("-")[1:][0]
+    print(transfer_uuid)
     transfer_data = context.bot_data.get("transfers", {}).get(transfer_uuid)
 
     if transfer_data is None:
@@ -54,8 +55,7 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
         return
 
     self_wallet = context.user_data["wallet"]
-    wallet_wordlist = list(transfer_data["wallet"])
-    wallet = Wallet.from_wordlist(wallet_wordlist)
+    wallet = transfer_data["wallet"]
     amount = transfer_data["amount"]
 
     if self_wallet.balance < amount:
