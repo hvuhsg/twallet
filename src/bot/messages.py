@@ -40,6 +40,4 @@ SEND_CONFIRM = "➡️ Withdrawal confirmation: TON\n\n" \
                "<b>Balance after</b>: {balance_after} TON\n\n" \
                "Do you confirm this operation?"
 
-SETTINGS = "⚙️ Settings\n\n" \
-           "Language: {language}\n" \
-           "Local currency: {currency}"
+SETTINGS = "⚙️ Settings" \

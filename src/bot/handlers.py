@@ -303,7 +303,7 @@ async def settings_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await context.user_data["msg"].edit_text(
-        SETTINGS.format(language=language, currency=currency),
+        SETTINGS,
         reply_markup=reply_markup,
     )
 
