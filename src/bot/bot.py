@@ -97,7 +97,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         [[
             InlineKeyboardButton(
                 f"Claim {amount} TON",
-                url=f"https://t.me/PrivateTONWalletBot?start=accept-{transfer_uuid}",
+                url=f"https://t.me/TONPrivateWalletBot?start=accept-{transfer_uuid}",
             )
         ]]
     )
