@@ -65,7 +65,6 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     query = update.inline_query.query
 
     if not query:  # empty query should not be handled
-        print("No Query")
         return
 
     wallet = context.user_data.get("wallet")
@@ -91,7 +90,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     transfer_uuid = token_urlsafe(16)
     if "transfers" not in context.bot_data:
         context.bot_data["transfers"] = {}
-    context.bot_data["transfers"][transfer_uuid] = {"wallet": wallet, "amount": amount}
+    context.bot_data["transfers"][transfer_uuid] = {"wallet": wallet.wordlist, "amount": amount}
 
     reply_markup = InlineKeyboardMarkup(
         [[
@@ -113,7 +112,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         ),
     ]
 
-    await update.inline_query.answer(results)
+    await update.inline_query.answer(results, cache_time=8)
 
 
 # Create the Telegram bot

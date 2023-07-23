@@ -54,7 +54,8 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
         return
 
     self_wallet = context.user_data["wallet"]
-    wallet = transfer_data["wallet"]
+    wallet_wordlist = transfer_data["wallet"]
+    wallet = Wallet.from_wordlist(wallet_wordlist)
     amount = transfer_data["amount"]
 
     if self_wallet.balance < amount:
