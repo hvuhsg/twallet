@@ -136,10 +136,10 @@ async def confirm_password_handler(update: Update, context: ContextTypes.DEFAULT
         context.user_data["wallet"] = wallet
         context.user_data["last_login"] = datetime.datetime.now()
 
-        await context.bot.set_chat_menu_button(
-            update.effective_chat.id,
-            MenuButtonWebApp("Wallet", WebAppInfo("https://t.me/TONPrivateWalletBot/Wallet")),
-        )
+        # await context.bot.set_chat_menu_button(
+        #     update.effective_chat.id,
+        #     MenuButtonWebApp("Wallet", WebAppInfo("https://t.me/TONPrivateWalletBot/Wallet")),
+        # )
 
         if redirect_state := context.user_data.get("redirect"):
             context.user_data.pop("redirect")
