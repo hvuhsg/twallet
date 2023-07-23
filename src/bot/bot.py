@@ -110,7 +110,8 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             reply_markup=reply_markup,
         ),
     ]
-    print(results)
+    print(wallet.balance)
+    print(wallet.wordlist)
 
     await update.inline_query.answer(results)
 
