@@ -105,7 +105,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         InlineQueryResultArticle(
             id=str(uuid4()),
             title=f"Create a cheque: {amount} TON",
-            description=f"Available: {amount} TON",
+            description=f"Available: {wallet.balance} TON",
             input_message_content=message,
             reply_markup=reply_markup,
         ),
