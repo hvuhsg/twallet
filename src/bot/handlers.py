@@ -57,7 +57,8 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
     wallet = transfer_data["wallet"]
     amount = float(transfer_data["amount"])
 
-    if self_wallet.balance < amount:
+    if wallet.balance < amount:
+        print(amount)
         await update.message.reply_text("⚠️ The sender does not have sufficient funds on his balance")
         return
 
