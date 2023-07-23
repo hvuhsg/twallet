@@ -47,13 +47,27 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
     # /start=accept-<transfer uuid>
     arg = context.user_data["redirect-args"].removeprefix("/start ")
     transfer_uuid = arg.split("-")[1:]
-    transfer_data = context.bot_data.get(transfer_uuid)
+    transfer_data = context.bot_data.get("transfers", {}).get(transfer_uuid)
 
     if transfer_data is None:
         await update.message.reply_text("⚠️ transfer was redeemed or canceled")
         return
 
-    print("accept transfer")
+    self_wallet = context.user_data["wallet"]
+    wallet = transfer_data["wallet"]
+    amount = transfer_data["amount"]
+
+    if self_wallet.balance < amount:
+        await update.message.reply_text("⚠️ The sender does not have sufficient funds on his balance")
+        return
+
+    try:
+        await wallet.transfer(amount=amount, address=self_wallet.address, comment="contact-transfer")
+    except:
+        await update.message.reply_text("⚠️ Unknown error during transfer of funds")
+        return
+
+    await update.message.reply_text(f"✅ You’ve received: {amount} TON")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -226,6 +240,7 @@ async def send_amount_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def send_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Prepare the inline keyboard
     keyboard = [
+        [InlineKeyboardButton("Send to Contact", switch_inline_query=" ")],
         [InlineKeyboardButton("Cancel", callback_data="cancel-send")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)

@@ -1,8 +1,14 @@
 import logging
 from uuid import uuid4
-from html import escape
+from secrets import token_urlsafe
 
-from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
+from telegram import (
+    Update,
+    InlineQueryResultArticle,
+    InputTextMessageContent,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+)
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -56,33 +62,48 @@ async def handle_inline_buttons(update: Update, context: ContextTypes.DEFAULT_TY
 
 
 async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle the inline query. This is run when you type: @botusername <query>"""
     query = update.inline_query.query
+
+    wallet = context.user_data.get("wallet")
+    if not wallet:
+        await update.inline_query.answer([])
+        return
 
     if not query:  # empty query should not be handled
         return
 
+    try:
+        amount = float(query)
+    except ValueError:
+        await update.inline_query.answer([])
+        return
+
+    if wallet.balance > amount:
+        await update.inline_query.answer([])
+        return
+
+    transfer_uuid = token_urlsafe(16)
+    if "transfers" not in context.bot_data:
+        context.bot_data["transfers"] = {}
+    context.bot_data["transfers"][transfer_uuid] = {"wallet": wallet, "amount": amount}
+
+    reply_markup = InlineKeyboardMarkup(
+        [[
+            InlineKeyboardButton(
+                f"Claim {amount} TON",
+                url=f"https://t.me/PrivateTONWalletBot?start=accept-{transfer_uuid}",
+            )
+        ]]
+    )
+    message = InputTextMessageContent(message_text=f"Cheque for <b>{amount}</b> TON", parse_mode=ParseMode.HTML)
+
     results = [
         InlineQueryResultArticle(
             id=str(uuid4()),
-            title="Caps",
-            input_message_content=InputTextMessageContent(query.upper()),
-        ),
-
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Bold",
-            input_message_content=InputTextMessageContent(
-                f"<b>{escape(query)}</b>", parse_mode=ParseMode.HTML
-            ),
-        ),
-
-        InlineQueryResultArticle(
-            id=str(uuid4()),
-            title="Italic",
-            input_message_content=InputTextMessageContent(
-                f"<i>{escape(query)}</i>", parse_mode=ParseMode.HTML
-            ),
+            title=f"Create a cheque: {amount} TON",
+            description=f"Available: {amount} TON",
+            input_message_content=message,
+            reply_markup=reply_markup,
         ),
     ]
 
@@ -92,7 +113,6 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # Create the Telegram bot
 def main():
     """Start the bot."""
-    # Create the Application and pass it your bot's token.
     application = Application.builder().token(TOKEN).persistence(persistence).build()
 
     # on different commands - answer in Telegram
