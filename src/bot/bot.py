@@ -81,7 +81,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         await update.inline_query.answer([])
         return
 
-    if wallet.balance > amount:
+    if wallet.balance < amount:
         print("Low balance")
         await update.inline_query.answer([])
         return
