@@ -47,7 +47,7 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
     # /start=accept-<transfer uuid>
     arg = context.user_data["redirect-args"].removeprefix("/start ")
     transfer_uuid = arg.split("-")[1:][0]
-    transfer_data = context.bot_data.get("transfers", {}).get(transfer_uuid)
+    transfer_data = context.bot_data.get("transfers", {}).pop(transfer_uuid, None)
 
     if transfer_data is None:
         await update.message.reply_text("⚠️ transfer was redeemed or canceled")
