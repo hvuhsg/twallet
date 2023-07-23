@@ -66,19 +66,23 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     wallet = context.user_data.get("wallet")
     if not wallet:
+        print("No Wallet")
         await update.inline_query.answer([])
         return
 
     if not query:  # empty query should not be handled
+        print("No Query")
         return
 
     try:
         amount = float(query)
     except ValueError:
+        print("Error parse amount")
         await update.inline_query.answer([])
         return
 
     if wallet.balance > amount:
+        print("Low balance")
         await update.inline_query.answer([])
         return
 
@@ -106,6 +110,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             reply_markup=reply_markup,
         ),
     ]
+    print(results)
 
     await update.inline_query.answer(results)
 
