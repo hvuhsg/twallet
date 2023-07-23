@@ -64,15 +64,17 @@ async def handle_inline_buttons(update: Update, context: ContextTypes.DEFAULT_TY
 async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.inline_query.query
 
+    if not query:  # empty query should not be handled
+        print("No Query")
+        return
+
     wallet = context.user_data.get("wallet")
     if not wallet:
         print("No Wallet")
         await update.inline_query.answer([])
         return
 
-    if not query:  # empty query should not be handled
-        print("No Query")
-        return
+    await wallet.load_state()
 
     try:
         amount = float(query)
@@ -110,8 +112,6 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             reply_markup=reply_markup,
         ),
     ]
-    print(wallet.balance)
-    print(wallet.wordlist)
 
     await update.inline_query.answer(results)
 
