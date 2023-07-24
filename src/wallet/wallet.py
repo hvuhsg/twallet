@@ -50,7 +50,7 @@ class Wallet:
         information = await self.client.get_address_information(self.address)
         self.balance = float(information["balance"])
         self.state = information["state"]
-        if self.balance > 0 and self.state == "uninitialized":
+        if self.balance > 0 and not self.initialized:
             await self.initialize()
 
     async def initialize(self):

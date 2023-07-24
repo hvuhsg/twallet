@@ -61,14 +61,22 @@ async def accept_transfer_handler(update: Update, context: ContextTypes.DEFAULT_
         await update.message.reply_text("⚠️ The sender does not have sufficient funds on his balance")
         return
 
+    if not self_wallet.initialized:
+        self_address = self_wallet.unbounceable_address
+    else:
+        self_address = self_wallet.address
+
     msg = await update.message.reply_text("Claiming...")
 
     try:
-        await wallet.transfer(amount=amount, address=self_wallet.address, comment="contact-transfer")
+        await wallet.transfer(amount=amount, address=self_address, comment="contact-transfer")
     except Exception as e:
         print(e, amount, self_wallet.address)
         await msg.edit_text("⚠️ Unknown error during transfer of funds")
         return
+    else:
+        if not self_wallet.initialized:
+            await self_wallet.initialize()
 
     await msg.edit_text(f"✅ You’ve received: {amount} TON")
 
