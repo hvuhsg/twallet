@@ -34,3 +34,7 @@ def validate_address(address: str) -> bool:
 
 def to_ton(nano_ton: int) -> float:
     return from_nano(nano_ton, unit=TonCurrencyEnum.ton)
+
+
+def is_unbounsable_address(address: str) -> bool:
+    return address[0] == "U"
