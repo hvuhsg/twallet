@@ -36,5 +36,10 @@ def to_ton(nano_ton: int) -> float:
     return from_nano(nano_ton, unit=TonCurrencyEnum.ton)
 
 
-def is_unbounsable_address(address: str) -> bool:
+def is_unbounceable_address(address: str) -> bool:
     return address[0] == "U"
+
+
+def change_address(address: str, bounceable: bool = True) -> str:
+    addr = Address(address)
+    return addr.to_string(is_user_friendly=True, is_url_safe=True, is_bounceable=bounceable)

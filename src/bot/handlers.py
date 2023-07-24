@@ -10,7 +10,7 @@ from .shared_actions import show_wallet_options, send_receipt
 from .helpers import create_password_hash, is_password_valid
 
 from wallet.wallet import Wallet
-from wallet.utils import validate_address, to_ton, is_unbounsable_address
+from wallet.utils import validate_address, to_ton, is_unbounceable_address, change_address
 
 
 async def deeplink_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -274,7 +274,7 @@ async def send_confirm_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         send_address = context.user_data['send_address']
         comment = context.user_data.pop("send-comment", "todo-comment")
 
-        if is_unbounsable_address(send_address) and send_amount > 2:
+        if is_unbounceable_address(send_address) and send_amount > 2:
             await context.bot.send_message(chat_id, "You can't send more then 2 TON to unbounsable address")
             return
 
