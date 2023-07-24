@@ -3,7 +3,7 @@ from typing import List
 from tonsdk.utils import to_nano
 from tonsdk.contract.wallet import WalletVersionEnum, Wallets, WalletContract, SendModeEnum
 
-from src.wallet.client import TonCenterTonClient, ToncenterClient
+from src.wallet.client import TonCenterTonClient, ToncenterClient, ToncenterWrongResult
 from src.wallet.utils import password_to_wordlist
 
 
@@ -50,7 +50,10 @@ class Wallet:
     async def initialize(self):
         result = self.wallet.create_init_external_message()
         boc = result["message"].to_boc(False)
-        return await self.client.send_boc(boc)
+        try:
+            return await self.client.send_boc(boc)
+        except ToncenterWrongResult as e:
+            print("Initialization error", e)
 
     async def transfer(self, amount: float, address: str, comment: str):
         await self.load_state()
