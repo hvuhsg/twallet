@@ -28,6 +28,10 @@ class Wallet:
         return self.wallet.address.to_string(is_bounceable=True, is_url_safe=True, is_user_friendly=True)
 
     @property
+    def unbounceable_address(self):
+        return self.wallet.address.to_string(is_bounceable=False, is_url_safe=True, is_user_friendly=True)
+
+    @property
     def initialized(self):
         return self.state != "uninitialized"
 
@@ -46,6 +50,8 @@ class Wallet:
         information = await self.client.get_address_information(self.address)
         self.balance = float(information["balance"])
         self.state = information["state"]
+        if self.balance > 0 and self.state == "uninitialized":
+            await self.initialize()
 
     async def initialize(self):
         result = self.wallet.create_init_external_message()
@@ -57,9 +63,6 @@ class Wallet:
 
     async def transfer(self, amount: float, address: str, comment: str):
         await self.load_state()
-
-        if self.state == "uninitialized":
-            await self.initialize()
 
         nano_amount = to_nano(number=amount, unit="TON")
         result = self.wallet.create_transfer_message(
