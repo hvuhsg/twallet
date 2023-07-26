@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 from tonsdk.utils import to_nano
@@ -12,7 +13,7 @@ class Wallet:
     version = WalletVersionEnum.v3r2
     send_mode = SendModeEnum.pay_gas_separately.value
     toncenter_base_url = "https://toncenter.com/api/v2/"
-    toncenter_api_key = "7457b1074146cf3bafab7dd9e48724b24cb6fe64753998120a10e78e162fe676"
+    toncenter_api_key = os.environ["TONCENTER_API_KEY"]
 
     def __init__(self, private_key: bytes, public_key: bytes, wallet_contract: WalletContract, wordlist: list):
         self.private_key = private_key

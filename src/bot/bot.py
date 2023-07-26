@@ -1,4 +1,5 @@
 import logging
+import os
 from uuid import uuid4
 from secrets import token_urlsafe
 
@@ -35,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 # Replace 'YOUR_TOKEN' with your actual Telegram bot token
-TOKEN = '6318499268:AAHuMcYtfpqY8XG2Q25GmU02QOchiK1_P3o'
+TOKEN = os.environ["BOT_TOKEN"]
 
 
 # Setup persistence
