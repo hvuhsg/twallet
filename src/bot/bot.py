@@ -40,7 +40,7 @@ TOKEN = os.environ["BOT_TOKEN"]
 
 
 # Setup persistence
-persistence = PicklePersistence(filepath="../data.db")
+persistence = PicklePersistence(filepath="../data/data.db")
 
 
 # Handler for handling user messages
