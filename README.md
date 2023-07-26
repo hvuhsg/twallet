@@ -17,5 +17,5 @@ docker build -t twallet .
 ```
 #### run docker container
 ```shell
-docker run -e BOT_TOKEN='' TONCENTER_API_KEY='' twallet:latest
+docker run -it -e BOT_TOKEN='' -e TONCENTER_API_KEY='' twallet:latest
 ```
